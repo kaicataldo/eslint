@@ -959,6 +959,21 @@ describe("eslint", function() {
             sinon.assert.calledTwice(spyLiteral);
             sinon.assert.calledOnce(spyBinaryExpression);
         });
+
+        it("SourceCode objects should be processed", function() {
+            var config = {
+                rules: {},
+                ecmaFeatures: {}
+            };
+
+            eslint.reset();
+            eslint.verify(code, config, filename, true);
+            var sourceCode = eslint.getSourceCode();
+
+            eslint.reset();
+            var messages = eslint.verify(sourceCode, config, filename, true);
+            assert.equal(messages.length, 0);
+        });
     });
 
     describe("when config has shared settings for rules", function() {
@@ -1086,6 +1101,18 @@ describe("eslint", function() {
 
             eslint.reset();
             var messages = eslint.verify(code, config, filename, true);
+            assert.equal(messages.length, 0);
+        });
+
+        it("should process SourceCode with empty config", function() {
+            var config = {};
+
+            eslint.reset();
+            eslint.verify(code, config, filename, true);
+            var sourceCode = eslint.getSourceCode();
+
+            eslint.reset();
+            var messages = eslint.verify(sourceCode, config, filename, true);
             assert.equal(messages.length, 0);
         });
     });
